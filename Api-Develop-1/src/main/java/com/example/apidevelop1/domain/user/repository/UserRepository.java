@@ -74,13 +74,6 @@ public class UserRepository {
         return Optional.ofNullable(DataAccessUtils.singleResult(users));
     }
 
-    private Optional<User> getNullableSingleUserById(Long id) {
-        String sql = String.format("SELECT * FROM %s WHERE id = :id", TABLE);
-        var params = new MapSqlParameterSource("id", id);
-        return getNullableSingleUser(sql, params, rowMapper);
-    }
-
-
     public User insert(User user) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName(TABLE)
@@ -103,7 +96,8 @@ public class UserRepository {
     }
 
     public User updateNameById(Long id, String name) {
-        User user = getNullableSingleUserById(id).orElseThrow();
+
+        User user = findById(id).orElseThrow();
 
         String sql = String.format("UPDATE %s SET name = :name, email = :email, createdDate = :createdDate WHERE id = :id", TABLE);
         var params = new MapSqlParameterSource()
@@ -114,7 +108,7 @@ public class UserRepository {
 
         namedParameterJdbcTemplate.update(sql, params);
 
-        return getNullableSingleUserById(id).orElseThrow();
+        return findById(id).orElseThrow();
 
     }
 }
