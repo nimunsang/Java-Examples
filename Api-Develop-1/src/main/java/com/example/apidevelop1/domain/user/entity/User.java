@@ -3,6 +3,7 @@ package com.example.apidevelop1.domain.user.entity;
 import com.example.apidevelop1.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class User {
 
     private final String email;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private final LocalDate createdDate;
 
     private final int LENGTH_MIN = 4;
