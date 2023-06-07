@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import utils.Constants;
+
+import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 
 @IntegrationTest
@@ -19,24 +23,190 @@ public class UserWriteServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @DisplayName("사용자정보 등록 테스트")
+    @DisplayName("중복이름 등록 테스트")
     @Test
-    public void testRegister() {
-        var command = new UserRegisterCommand(
-                "heechan",
-                "sk980919@naver.com"
-        );
+    public void testDuplicatedName() {
+        String duplicatedName = userRepository.getRandomUser().getName();
+        String normalEmail = "ppp@pppp.com";
+        UserRegisterCommand command = new UserRegisterCommand(duplicatedName, normalEmail);
 
-        var user = userWriteService.register(command);
-
-        assertEquals(command, user);
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> userWriteService.register(command));
     }
 
-    private void assertEquals(UserRegisterCommand userRegisterCommand, User user) {
-        Assertions.assertNotNull(userRegisterCommand.getName());
-        Assertions.assertNotNull(userRegisterCommand.getEmail());
+    @DisplayName("중복이메일 등록 테스트")
+    @Test
+    public void testDuplicatedEmail() {
+        String normalName = "pppp";
+        String duplicatedEmail = userRepository.getRandomUser().getEmail();
+        UserRegisterCommand command = new UserRegisterCommand(normalName, duplicatedEmail);
 
-        Assertions.assertEquals(userRegisterCommand.getEmail(), user.getEmail());
-        Assertions.assertEquals(userRegisterCommand.getName(), user.getName());
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> userWriteService.register(command));
+    }
+
+    @DisplayName("이름 길이 작음 테스트")
+    @Test
+    public void testShortName() {
+        String shortName = "p".repeat(Constants.NAME_LENGTH_MIN - 1);
+        String normalEmail = "test@test.com";
+        UserRegisterCommand command = new UserRegisterCommand(shortName, normalEmail);
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> userWriteService.register(command));
+    }
+
+    @DisplayName("이름 길이 김 테스트")
+    @Test
+    public void testLongName() {
+        String longName = "p".repeat(Constants.NAME_LENGTH_MAX + 1);
+        String normalEmail = "test@test.com";
+        UserRegisterCommand command = new UserRegisterCommand(longName, normalEmail);
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> userWriteService.register(command));
+    }
+
+    @DisplayName("이름 길이 적합함 테스트")
+    @Test
+    public void testAppropriateName() {
+        String normalName = "p".repeat(Constants.NAME_LENGTH_APPROPRIATE);
+        String normalEmail = "test@test.com";
+        UserRegisterCommand command = new UserRegisterCommand(normalName, normalEmail);
+        User user = userWriteService.register(command);
+
+        Assertions.assertNotNull(user);
+    }
+
+    @DisplayName("사용자 이름 변경 성공 테스트")
+    @Test
+    public void testUpdateAppropriateName() {
+        String to = "p".repeat(Constants.NAME_LENGTH_APPROPRIATE);
+        User randomUser = userRepository.getRandomUser();
+
+        randomUser.changeName(to);
+
+        Assertions.assertEquals(randomUser.getName(), to);
+    }
+
+    @DisplayName("사용자 짧은 이름 변경실패 테스트")
+    @Test
+    public void testUpdateShortName() {
+        String shortName = "p".repeat(Constants.NAME_LENGTH_MIN - 1);
+        User randomUser = userRepository.getRandomUser();
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> randomUser.changeName(shortName));
+    }
+
+    @DisplayName("사용자 긴 이름 변경실패 테스트")
+    @Test
+    public void testUpdateLongName() {
+        String longName = "p".repeat(Constants.NAME_LENGTH_MAX + 1);
+        User randomUser = userRepository.getRandomUser();
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> randomUser.changeName(longName));
+    }
+
+
+    @DisplayName("사용자 이메일 변경 성공 테스트")
+    @Test
+    public void testUpdateAppropriateEmail() {
+        String normalEmail = "test@test.com";
+        User randomUser = userRepository.getRandomUser();
+
+        randomUser.changeEmail(normalEmail);
+
+        Assertions.assertEquals(randomUser.getEmail(), normalEmail);
+    }
+
+    @DisplayName("사용자 이메일 변경 실패 테스트")
+    @Test
+    public void testUpdateNotMatchesPatternEmail() {
+        String wrongEmail = "test";
+        User randomUser = userRepository.getRandomUser();
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> randomUser.changeEmail(wrongEmail));
+    }
+
+    @DisplayName("사용자 id로 삭제 성공 테스트")
+    @Test
+    public void testDeleteUserById() {
+        User randomUser = userRepository.getRandomUser();
+        int removedUserCount = userWriteService.deleteById(randomUser.getId());
+
+        Assertions.assertTrue(removedUserCount > 0);
+    }
+
+    @DisplayName("사용자 id로 삭제 실패 테스트")
+    @Test
+    public void testDeleteNotExistingUserById() {
+        Long garbageId = -1L;
+        Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> userWriteService.deleteById(garbageId));
+    }
+
+    @DisplayName("사용자 이메일로 삭제 성공 테스트")
+    @Test
+    public void testDeleteUserByEmail() {
+        User randomUser = userRepository.getRandomUser();
+        int removedUserCount = userWriteService.deleteByEmail(randomUser.getEmail());
+
+        Assertions.assertTrue(removedUserCount > 0);
+    }
+
+    @DisplayName("사용자 이메일로 삭제 실패 테스트")
+    @Test
+    public void testDeleteNotExistingUserByEmail() {
+        String garbageEmail = "q1w2e3r4t5@q1w2e3r4r4.com";
+        Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> userWriteService.deleteByEmail(garbageEmail));
+    }
+
+    @DisplayName("사용자 이름으로 삭제 성공 테스트")
+    @Test
+    public void testDeleteUserByName() {
+        User randomUser = userRepository.getRandomUser();
+        int removedUserCount = userWriteService.deleteByName(randomUser.getName());
+
+        Assertions.assertTrue(removedUserCount > 0);
+    }
+
+    @DisplayName("사용자 이름으로 삭제 실패 테스트")
+    @Test
+    public void testDeleteNotExistingUserByName() {
+        String garbageName = "q1w2e3r4t5y6u77";
+        Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> userWriteService.deleteByName(garbageName));
+    }
+
+    @DisplayName("사용자 생성날짜로 삭제 성공 테스트")
+    @Test
+    public void testDeleteUserByCreatedDate() {
+        User randomUser = userRepository.getRandomUser();
+        int removedUserCount = userWriteService.deleteByCreatedDate(randomUser.getCreatedDate());
+
+        Assertions.assertTrue(removedUserCount > 0);
+    }
+
+    @DisplayName("사용자 생성날짜로 삭제 실패 테스트")
+    @Test
+    public void testDeleteNotExistingUserByCreatedDate() {
+        LocalDate garbageDate = LocalDate.of(1111, 11, 11);
+        Assertions.assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> userWriteService.deleteByCreatedDate(garbageDate));
     }
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
+import utils.Constants;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -16,19 +17,12 @@ public class User {
 
     private final Long id;
 
-    private final String name;
+    private String name;
 
-    private final String email;
+    private String email;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private final LocalDate createdDate;
-
-    private final int LENGTH_MIN = 4;
-    private final int LENGTH_MAX = 20;
-
-    private final String namePattern = "^[0-9a-zA-Z]+$";
-    private final String emailPattern = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+.com$";
-
 
     @Builder
     public User(Long id, String name, String email, LocalDate createdDate) {
@@ -40,7 +34,7 @@ public class User {
         validateEmail(email);
         this.email = Objects.requireNonNull(email);
 
-        this.createdDate = createdDate;
+        this.createdDate = createdDate == null ? LocalDate.now() : createdDate;
     }
 
     public UserDto toDto() {
@@ -49,21 +43,28 @@ public class User {
 
     public void validateName(String name) {
         Assert.isTrue(
-                LENGTH_MIN <= name.length() && name.length() <= LENGTH_MAX,
-                String.format("이름 사용 불가: 이름의 길이는 %d 이상 %d 이하여야 합니다", LENGTH_MIN, LENGTH_MAX));
-
+                Constants.NAME_LENGTH_MIN <= name.length() && name.length() <= Constants.NAME_LENGTH_MAX,
+                Constants.NAME_LENGTH_ERROR_MESSAGE);
         Assert.isTrue(
-                Pattern.matches(namePattern, name),
-                "이름 사용 불가: 이름은 반드시 영어 소문자, 영어 대문자, 숫자만 포함해야 합니다.");
-
-        //TODO: 이름이 데이터베이스에 존재하는가 체크
+                Pattern.matches(Constants.NAME_PATTERN, name),
+                Constants.NAME_PATTERN_ERROR_MESSAGE);
     }
 
     public void validateEmail(String email) {
         Assert.isTrue(
-                Pattern.matches(emailPattern, email),
-                "이메일 사용 불가: 이메일 형식이 올바르지 않습니다.");
+                Pattern.matches(Constants.EMAIL_PATTERN, email),
+                Constants.EMAIL_PATTERN_ERROR_MESSAGE);
+    }
 
-        //TODO: 이메일이 데이터베이스에 존재하는가 체크
+    public void changeName(String to) {
+        Objects.requireNonNull(to);
+        validateName(to);
+        this.name = to;
+    }
+
+    public void changeEmail(String to) {
+        Objects.requireNonNull(to);
+        validateEmail(to);
+        this.email = to;
     }
 }

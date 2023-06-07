@@ -6,10 +6,13 @@ import com.example.apidevelop1.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
@@ -18,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,6 +29,7 @@ import java.util.Optional;
 @Repository
 public class UserRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private final String TABLE = "User";
 
@@ -69,11 +74,6 @@ public class UserRepository {
         return Optional.of(users);
     }
 
-    private Optional<User> getNullableSingleUser(String sql, MapSqlParameterSource params, RowMapper<User> rowMapper) {
-        List<User> users = namedParameterJdbcTemplate.query(sql, params, rowMapper);
-        return Optional.ofNullable(DataAccessUtils.singleResult(users));
-    }
-
     public User insert(User user) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName(TABLE)
@@ -95,20 +95,50 @@ public class UserRepository {
                 .build();
     }
 
-    public User updateNameById(Long id, String name) {
-
-        User user = findById(id).orElseThrow();
-
+    public User update(User user) {
         String sql = String.format("UPDATE %s SET name = :name, email = :email, createdDate = :createdDate WHERE id = :id", TABLE);
-        var params = new MapSqlParameterSource()
-                .addValue("id", id)
-                .addValue("name", name)
-                .addValue("email", user.getEmail())
-                .addValue("createdDate", user.getCreatedDate());
-
+        var params = new BeanPropertySqlParameterSource(user);
         namedParameterJdbcTemplate.update(sql, params);
+        return user;
+    }
 
-        return findById(id).orElseThrow();
+    public int delete(User user) {
+        String sql = String.format("DELETE FROM %s WHERE id = :id", TABLE);
+        var params = new MapSqlParameterSource().addValue("id", user.getId());
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
 
+    public int delete(List<User> users) {
+        String sql = String.format("DELETE FROM %s WHERE createdDate = :createdDate", TABLE);
+        var params = new MapSqlParameterSource().addValue("createdDate", users.get(0).getCreatedDate());
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    private Optional<User> getNullableSingleUser(String sql, MapSqlParameterSource params, RowMapper<User> rowMapper) {
+        List<User> users = namedParameterJdbcTemplate.query(sql, params, rowMapper);
+        return Optional.ofNullable(DataAccessUtils.singleResult(users));
+    }
+
+    public boolean nameNotExistsInDatabase(String name) {
+        String sql = String.format("SELECT * FROM %s WHERE name = :name", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
+        List<User> users = namedParameterJdbcTemplate.query(sql, params, rowMapper);
+        return users.isEmpty();
+    }
+
+    public boolean emailNotExistsInDatabase(String email) {
+        String sql = String.format("SELECT * FROM %s WHERE email = :email", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("email", email);
+        List<User> users = namedParameterJdbcTemplate.query(sql, params, rowMapper);
+        return users.isEmpty();
+    }
+
+    public User getRandomUser() {
+        String sql = String.format("SELECT * FROM %s LIMIT 1", TABLE);
+        List<User> users = jdbcTemplate.query(sql, rowMapper);
+        if (users.size() == 0) {
+            throw new NoSuchElementException("사용자가 아무도 존재하지 않습니다.");
+        }
+        return users.get(0);
     }
 }

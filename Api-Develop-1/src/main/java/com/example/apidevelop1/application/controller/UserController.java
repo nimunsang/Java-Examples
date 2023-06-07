@@ -67,7 +67,34 @@ public class UserController {
         return user.toDto();
     }
 
-//    @Tag(name="updateUser")
-//    @PostMapping("update/{id}/email")
-//    public UserDto updateEmailById()
+    @Tag(name="updateUser")
+    @PostMapping("update/{id}/email")
+    public UserDto updateEmailById(@PathVariable Long id, @RequestBody String to) {
+        User user = userWriteService.updateEmailById(id, to);
+        return user.toDto();
+    }
+
+    @Tag(name="deleteUser")
+    @PostMapping("/delete/id")
+    public int deleteById(@RequestBody Long id) {
+        return userWriteService.deleteById(id);
+    }
+
+    @Tag(name="deleteUser")
+    @PostMapping("/delete/name")
+    public int deleteByName(@RequestBody String name) {
+        return userWriteService.deleteByName(name);
+    }
+
+    @Tag(name="deleteUser")
+    @PostMapping("/delete/email")
+    public int deleteByEmail(@RequestBody String email) {
+        return userWriteService.deleteByEmail(email);
+    }
+
+    @Tag(name="deleteUser")
+    @PostMapping("/delete/created-date")
+    public int deleteByCreatedDate(@RequestBody LocalDate createdDate) {
+        return userWriteService.deleteByCreatedDate(createdDate);
+    }
 }

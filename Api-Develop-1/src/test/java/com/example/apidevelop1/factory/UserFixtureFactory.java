@@ -1,15 +1,20 @@
 package com.example.apidevelop1.factory;
 
+import com.example.apidevelop1.IntegrationTest;
 import com.example.apidevelop1.domain.user.dto.UserDto;
 import com.example.apidevelop1.domain.user.entity.User;
+import com.example.apidevelop1.domain.user.repository.UserRepository;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.randomizers.range.LongRangeRandomizer;
 import org.jeasy.random.randomizers.text.StringRandomizer;
 import org.jeasy.random.randomizers.time.LocalDateRandomizer;
+import org.junit.jupiter.api.TestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import static org.jeasy.random.FieldPredicates.named;
+
 
 public class UserFixtureFactory {
 
