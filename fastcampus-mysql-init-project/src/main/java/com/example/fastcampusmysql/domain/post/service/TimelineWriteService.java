@@ -10,18 +10,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class TimelineWriteService {
+    final private TimelineRepository timelineRepository;
 
-    private final TimelineRepository timelineRepository;
-
-    public void deliveryToTimeline(Long postId, List<Long> toMemberIds) {
-        var timelines = toMemberIds.stream()
-                .map((memberId) -> toTimeline(postId, memberId))
+    public void deliveryToTimeLine(Long postId, List<Long> toMemberIds) {
+        var timeLines = toMemberIds.stream()
+                .map((memberId) -> toTimeLine(postId, memberId))
                 .toList();
-
-        timelineRepository.bulkInsert(timelines);
+        timelineRepository.bulkInsert(timeLines);
     }
 
-    private static Timeline toTimeline(Long postId, Long memberId) {
-        return Timeline.builder().memberId(memberId).postId(postId).build();
+    private Timeline toTimeLine(Long postId, Long memberId) {
+        return Timeline
+                .builder()
+                .memberId(memberId)
+                .postId(postId)
+                .build();
     }
 }

@@ -12,15 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class TimelineReadService {
-
-    private final TimelineRepository timelineRepository;
+    final private TimelineRepository timelineRepository;
 
     public PageCursor<Timeline> getTimelines(Long memberId, CursorRequest cursorRequest) {
         var timelines = findAllBy(memberId, cursorRequest);
         var nextKey = timelines.stream()
                 .mapToLong(Timeline::getId)
-                .min()
-                .orElse(CursorRequest.NONE_KEY);
+                .min().orElse(CursorRequest.NONE_KEY);
         return new PageCursor<>(cursorRequest.next(nextKey), timelines);
     }
 

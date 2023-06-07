@@ -1,4 +1,4 @@
-package com.example.fastcampusmysql.application.usecase;
+package com.example.fastcampusmysql.application.usacase;
 
 import com.example.fastcampusmysql.domain.follow.entity.Follow;
 import com.example.fastcampusmysql.domain.follow.service.FollowReadService;
@@ -12,24 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class CreatePostUsecase {
+    final private PostWriteService postWriteService;
+    final private FollowReadService followReadService;
+    final private TimelineWriteService timelineWriteService;
 
-    private final PostWriteService postWriteService;
+    @Transactional
+    public Long execute(PostCommand command) {
+        var postId = postWriteService.create(command);
 
-    private final FollowReadService followReadService;
-
-    private final TimelineWriteService timelineWriteService;
-
-    public Long execute(PostCommand postCommand) {
-        var postId = postWriteService.create(postCommand);
-
-        var followMemberIds = followReadService
-                .getFollowers(postCommand.memberId())
-                .stream()
-                .map(Follow::getFromMemberId)
+        var followerMemberIds = followReadService
+                .getFollowers(command.memberId()).stream()
+                .map((Follow::getFromMemberId))
                 .toList();
 
-        timelineWriteService.deliveryToTimeline(postId, followMemberIds);
+        timelineWriteService.deliveryToTimeLine(postId, followerMemberIds);
 
         return postId;
     }
+
 }

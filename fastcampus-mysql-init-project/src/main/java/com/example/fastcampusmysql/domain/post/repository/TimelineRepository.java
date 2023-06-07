@@ -19,9 +19,9 @@ import java.util.List;
 public class TimelineRepository {
     final static String TABLE = "Timeline";
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    final private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final static RowMapper<Timeline> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> Timeline.builder()
+    final static private RowMapper<Timeline> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> Timeline.builder()
             .id(resultSet.getLong("id"))
             .memberId(resultSet.getLong("memberId"))
             .postId(resultSet.getLong("postId"))
@@ -29,24 +29,24 @@ public class TimelineRepository {
             .build();
 
     public List<Timeline> findAllByMemberIdAndOrderByIdDesc(Long memberId, int size) {
-            String sql = String.format("""
-                    SELECT *
-                    FROM %s
-                    WHERE memberId = :memberId
-                    ORDER BY id desc
-                    LIMIT :size
-                    """, TABLE);
+        var sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE memberId = :memberId
+                ORDER BY id desc
+                LIMIT :size
+                """, TABLE);
 
-            var params = new MapSqlParameterSource()
-                    .addValue("memberId", memberId)
-                    .addValue("size", size);
+        var params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("size", size)
+                ;
 
-            return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
-
     public List<Timeline> findAllByLessThanIdAndMemberIdAndOrderByIdDesc(Long id, Long memberId, int size) {
-        String sql = String.format("""
+        var sql = String.format("""
                 SELECT *
                 FROM %s
                 WHERE memberId = :memberId and id < :id
@@ -57,8 +57,8 @@ public class TimelineRepository {
         var params = new MapSqlParameterSource()
                 .addValue("memberId", memberId)
                 .addValue("id", id)
-                .addValue("size", size);
-
+                .addValue("size", size)
+                ;
         return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
@@ -66,7 +66,8 @@ public class TimelineRepository {
         if (timeline.getId() == null) {
             return insert(timeline);
         }
-        throw new UnsupportedOperationException("Timeline은 갱신을 지원하지 않습니다.");
+
+        throw new UnsupportedOperationException("Timeline는 갱신을 지원하지 않습니다");
     }
 
     private Timeline insert(Timeline timeline) {
@@ -86,15 +87,15 @@ public class TimelineRepository {
     }
 
     public void bulkInsert(List<Timeline> timeline) {
-        String sql = String.format("""
+        var sql = String.format("""
                 INSERT INTO `%s` (memberId, postId, createdAt)
                 VALUES (:memberId, :postId, :createdAt)
                 """, TABLE);
 
-        SqlParameterSource[] params = timeline.stream()
+        SqlParameterSource[] params = timeline
+                .stream()
                 .map(BeanPropertySqlParameterSource::new)
                 .toArray(SqlParameterSource[]::new);
-
         namedParameterJdbcTemplate.batchUpdate(sql, params);
     }
 }

@@ -22,11 +22,9 @@ public class PostWriteService {
         return postRepository.save(post).getId();
     }
 
+
     @Transactional
     public void likePost(Long postId) {
-        /*
-            조회, 변경, 조회 -> 동시성 이슈가 발생하기 딱 좋음
-         */
         var post = postRepository.findById(postId, true).orElseThrow();
         post.incrementLikeCount();
         postRepository.save(post);

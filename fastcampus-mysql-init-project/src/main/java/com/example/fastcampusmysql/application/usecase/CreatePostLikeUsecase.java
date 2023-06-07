@@ -6,12 +6,12 @@ import com.example.fastcampusmysql.domain.post.service.PostReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class CreatePostLikeUsecase {
-    private final PostReadService postReadService;
-    private final MemberReadService memberReadService;
-    private final PostLikeWriteService postLikeWriteService;
+    final private PostReadService postReadService;
+    final private MemberReadService memberReadService;
+    final private PostLikeWriteService postLikeWriteService;
 
     public void execute(Long postId, Long memberId) {
         var post = postReadService.getPost(postId);

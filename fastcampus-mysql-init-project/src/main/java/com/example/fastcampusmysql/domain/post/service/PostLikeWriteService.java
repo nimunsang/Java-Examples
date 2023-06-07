@@ -12,13 +12,11 @@ import org.springframework.stereotype.Service;
 public class PostLikeWriteService {
     final private PostLikeRepository postLikeRepository;
 
-    public Long create(Post post, MemberDto memberDto) {
-        var postLike = PostLike
-                .builder()
+    public void create(Post post, MemberDto memberDto) {
+        var postLike = PostLike.builder()
                 .postId(post.getId())
                 .memberId(memberDto.id())
                 .build();
-
-        return postLikeRepository.save(postLike).getPostId();
+        postLikeRepository.save(postLike);
     }
 }

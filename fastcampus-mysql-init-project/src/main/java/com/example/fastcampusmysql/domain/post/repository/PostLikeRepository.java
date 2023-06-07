@@ -12,41 +12,39 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
 public class PostLikeRepository {
     final static String TABLE = "PostLike";
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    final private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final static RowMapper<PostLike> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> PostLike.builder()
+    final static private RowMapper<PostLike> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> PostLike.builder()
             .id(resultSet.getLong("id"))
             .memberId(resultSet.getLong("memberId"))
             .postId(resultSet.getLong("postId"))
             .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
             .build();
 
-    public Long count(Long postId) {
-        String sql = String.format("""
+    public Long countByPostId(Long postId) {
+        var query = String.format("""
                 SELECT count(id)
                 FROM %s
-                WHERE postId = :postId
+                WHERE postId = :postId 
                 """, TABLE);
-
-        var params = new MapSqlParameterSource().addValue("postId", postId);
-        return namedParameterJdbcTemplate.queryForObject(sql, params, Long.class);
+        var params = new MapSqlParameterSource()
+                .addValue("postId", postId);
+        return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
     }
 
     public PostLike save(PostLike postLike) {
         if (postLike.getId() == null) {
             return insert(postLike);
         }
-        throw new UnsupportedOperationException("Timeline은 갱신을 지원하지 않습니다.");
+
+        throw new UnsupportedOperationException("PostLike는 갱신을 지원하지 않습니다");
     }
-
-
 
     private PostLike insert(PostLike postLike) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
@@ -64,16 +62,4 @@ public class PostLikeRepository {
                 .build();
     }
 
-    public void bulkInsert(List<PostLike> postLike) {
-        String sql = String.format("""
-                INSERT INTO `%s` (memberId, postId, createdAt)
-                VALUES (:memberId, :postId, :createdAt)
-                """, TABLE);
-
-        SqlParameterSource[] params = postLike.stream()
-                .map(BeanPropertySqlParameterSource::new)
-                .toArray(SqlParameterSource[]::new);
-
-        namedParameterJdbcTemplate.batchUpdate(sql, params);
-    }
 }
