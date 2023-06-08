@@ -12,7 +12,6 @@ public class PostReadService {
     private final PostRepository postRepository;
 
     public Post getPostById(Long id) {
-        Post post = postRepository.getPostById(id).orElseThrow();
-        return post;
+        return postRepository.getPostById(id).orElseThrow();
     }
 }

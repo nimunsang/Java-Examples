@@ -17,4 +17,7 @@ public class Constants {
 
     public final static List<String> POST_CATEGORIES = List.of("공지", "자유", "질문", "정보");
 
+    public final static int POST_TITLE_LENGTH_MAX = 50;
+    public final static int POST_CONTENT_LENGTH_MAX = 1000;
+
 }

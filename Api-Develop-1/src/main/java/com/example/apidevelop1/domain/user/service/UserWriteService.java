@@ -2,6 +2,7 @@ package com.example.apidevelop1.domain.user.service;
 
 
 import com.example.apidevelop1.domain.user.dto.UserRegisterCommand;
+import com.example.apidevelop1.domain.user.dto.UserUpdateCommand;
 import com.example.apidevelop1.domain.user.entity.User;
 import com.example.apidevelop1.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,19 +36,18 @@ public class UserWriteService {
     }
 
     @Transactional
-    public User updateNameById(Long id, String to) {
-        // 해당 id를 가진 사용자의 이름 변경
-        User user = userReadService.findById(id);
-        user.changeName(to);
-        return userRepository.update(user);
-    }
+    public int update(UserUpdateCommand userUpdateCommand) {
+        User user = userReadService.findById(userUpdateCommand.getId());
+        String name = userUpdateCommand.getName() == null ? user.getName() : userUpdateCommand.getName();
+        String email = userUpdateCommand.getEmail() == null ? user.getEmail() : userUpdateCommand.getEmail();
+        User updateUser = User.builder()
+                .id(user.getId())
+                .name(name)
+                .email(email)
+                .createdDate(user.getCreatedDate())
+                .build();
 
-    @Transactional
-    public User updateEmailById(Long id, String to) {
-        // 해당 id를 가진 사용자의 이메일 변경
-        User user = userReadService.findById(id);
-        user.changeEmail(to);
-        return userRepository.update(user);
+        return userRepository.update(updateUser);
     }
 
     @Transactional

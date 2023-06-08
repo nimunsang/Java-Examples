@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class PostCommand {
+public class PostCreateCommand {
 
     private final String title;
 
@@ -15,5 +15,6 @@ public class PostCommand {
 
     private final String category;
 
-    private final Long memberId;
+    private final Long userId;
+
 }

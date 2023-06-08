@@ -95,11 +95,10 @@ public class UserRepository {
                 .build();
     }
 
-    public User update(User user) {
+    public int update(User user) {
         String sql = String.format("UPDATE %s SET name = :name, email = :email, createdDate = :createdDate WHERE id = :id", TABLE);
         var params = new BeanPropertySqlParameterSource(user);
-        namedParameterJdbcTemplate.update(sql, params);
-        return user;
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     public int delete(User user) {
