@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.List;
+
 public class Constants {
     public final static int NAME_LENGTH_MIN = 4;
     public final static int NAME_LENGTH_MAX = 20;
@@ -11,4 +13,8 @@ public class Constants {
 
     public final static String EMAIL_PATTERN = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+.com$";
     public final static String EMAIL_PATTERN_ERROR_MESSAGE ="올바르지 않은 이메일 형식입니다.";
+
+
+    public final static List<String> POST_CATEGORIES = List.of("공지", "자유", "질문", "정보");
+
 }

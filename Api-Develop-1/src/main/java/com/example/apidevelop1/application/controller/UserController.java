@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 @RestController
 public class UserController {
+
     private final UserWriteService userWriteService;
     private final UserReadService userReadService;
 
