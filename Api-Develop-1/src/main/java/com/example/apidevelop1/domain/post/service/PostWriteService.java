@@ -46,7 +46,7 @@ public class PostWriteService {
     @Transactional
     public int deletePost(Long id) {
         Post post = postReadService.getPostById(id);
-        if (post.isQuestionPost()) {
+        if (post.getCategory().equals("질문")) {
             throw new IllegalArgumentException("질문글은 삭제할 수 없습니다.");
         }
         return postRepository.delete(id);

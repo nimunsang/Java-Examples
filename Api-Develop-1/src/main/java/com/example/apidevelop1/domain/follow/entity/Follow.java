@@ -1,10 +1,13 @@
 package com.example.apidevelop1.domain.follow.entity;
 
+import com.example.apidevelop1.domain.follow.dto.FollowDto;
+import com.example.apidevelop1.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class Follow {

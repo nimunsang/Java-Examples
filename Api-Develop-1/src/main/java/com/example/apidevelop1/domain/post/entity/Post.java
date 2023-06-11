@@ -40,6 +40,7 @@ public class Post {
         this.category = Objects.requireNonNull(category);
 
         this.userId = Objects.requireNonNull(userId);
+
         this.createdAt = createdAt == null ? LocalDateTime.now() : createdAt;
     }
 
@@ -56,9 +57,5 @@ public class Post {
     public void validateCategory(String category) {
         Assert.isTrue(Constants.POST_CATEGORIES.contains(category),
                 "존재하지 않는 카테고리입니다.");
-    }
-
-    public boolean isQuestionPost() {
-        return category.equals("질문");
     }
 }

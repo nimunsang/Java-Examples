@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.Constants;
 
-import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 
@@ -154,59 +153,5 @@ public class UserWriteServiceTest {
         Assertions.assertThrows(
                 NoSuchElementException.class,
                 () -> userWriteService.deleteById(garbageId));
-    }
-
-    @DisplayName("사용자 이메일로 삭제 성공 테스트")
-    @Test
-    public void testDeleteUserByEmail() {
-        User randomUser = userRepository.getRandomUser();
-        int removedUserCount = userWriteService.deleteByEmail(randomUser.getEmail());
-
-        Assertions.assertTrue(removedUserCount > 0);
-    }
-
-    @DisplayName("사용자 이메일로 삭제 실패 테스트")
-    @Test
-    public void testDeleteNotExistingUserByEmail() {
-        String garbageEmail = "q1w2e3r4t5@q1w2e3r4r4.com";
-        Assertions.assertThrows(
-                NoSuchElementException.class,
-                () -> userWriteService.deleteByEmail(garbageEmail));
-    }
-
-    @DisplayName("사용자 이름으로 삭제 성공 테스트")
-    @Test
-    public void testDeleteUserByName() {
-        User randomUser = userRepository.getRandomUser();
-        int removedUserCount = userWriteService.deleteByName(randomUser.getName());
-
-        Assertions.assertTrue(removedUserCount > 0);
-    }
-
-    @DisplayName("사용자 이름으로 삭제 실패 테스트")
-    @Test
-    public void testDeleteNotExistingUserByName() {
-        String garbageName = "q1w2e3r4t5y6u77";
-        Assertions.assertThrows(
-                NoSuchElementException.class,
-                () -> userWriteService.deleteByName(garbageName));
-    }
-
-    @DisplayName("사용자 생성날짜로 삭제 성공 테스트")
-    @Test
-    public void testDeleteUserByCreatedDate() {
-        User randomUser = userRepository.getRandomUser();
-        int removedUserCount = userWriteService.deleteByCreatedDate(randomUser.getCreatedDate());
-
-        Assertions.assertTrue(removedUserCount > 0);
-    }
-
-    @DisplayName("사용자 생성날짜로 삭제 실패 테스트")
-    @Test
-    public void testDeleteNotExistingUserByCreatedDate() {
-        LocalDate garbageDate = LocalDate.of(1111, 11, 11);
-        Assertions.assertThrows(
-                IndexOutOfBoundsException.class,
-                () -> userWriteService.deleteByCreatedDate(garbageDate));
     }
 }

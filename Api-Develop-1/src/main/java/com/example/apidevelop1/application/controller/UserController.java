@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Tag(name="User")
+@Tag(name="Users")
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RestController
 public class UserController {
 
@@ -27,35 +27,35 @@ public class UserController {
     private final UserReadService userReadService;
 
     @Operation(summary="사용자 등록")
-    @PostMapping("/create")
+    @PostMapping("")
     public UserDto register(@RequestBody UserRegisterCommand userRegisterCommand) {
         User user = userWriteService.register(userRegisterCommand);
         return user.toDto();
     }
 
     @Operation(summary="id로 사용자 검색")
-    @GetMapping("find-id/{id}")
+    @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {
         User user = userReadService.findById(id);
         return user.toDto();
     }
 
     @Operation(summary="이름으로 사용자 검색")
-    @GetMapping("find-name/{name}")
+    @GetMapping("/{name}")
     public UserDto findByName(@PathVariable String name) {
         User user = userReadService.findByName(name);
         return user.toDto();
     }
 
     @Operation(summary="Email로 사용자 검색")
-    @GetMapping("find-email/{email}")
+    @GetMapping("/{email}")
     public UserDto findByEmail(@PathVariable String email) {
         User user = userReadService.findByEmail(email);
         return user.toDto();
     }
 
     @Operation(summary="생성일자로 사용자 검색")
-    @GetMapping("find-date/{date}")
+    @GetMapping("/{date}")
     public List<UserDto> findByCreatedDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<User> user = userReadService.findByCreatedDate(date);
         return user
@@ -65,32 +65,15 @@ public class UserController {
     }
 
     @Operation(summary="사용자 정보 수정")
-    @PostMapping("/update")
+    @PutMapping("")
     public int update(@RequestBody UserUpdateCommand userUpdateCommand) {
         return userWriteService.update(userUpdateCommand);
     }
 
     @Operation(summary="id로 사용자 삭제")
-    @PostMapping("/delete/id")
-    public int deleteById(@RequestBody Long id) {
+    @DeleteMapping("/{id}")
+    public int delete(@PathVariable Long id) {
         return userWriteService.deleteById(id);
     }
 
-    @Operation(summary="이름으로 사용자 삭제")
-    @PostMapping("/delete/name")
-    public int deleteByName(@RequestBody String name) {
-        return userWriteService.deleteByName(name);
-    }
-
-    @Operation(summary="Email로 사용자 삭제")
-    @PostMapping("/delete/email")
-    public int deleteByEmail(@RequestBody String email) {
-        return userWriteService.deleteByEmail(email);
-    }
-
-    @Operation(summary="생성일자의 사용자 모두 삭제")
-    @PostMapping("/delete/created-date")
-    public int deleteByCreatedDate(@RequestBody LocalDate createdDate) {
-        return userWriteService.deleteByCreatedDate(createdDate);
-    }
 }

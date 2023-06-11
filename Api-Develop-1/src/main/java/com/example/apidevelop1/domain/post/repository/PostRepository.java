@@ -89,4 +89,23 @@ public class PostRepository {
 
         return post;
     }
+
+    public List<Post> getPagesOrderByCreatedAtDesc(int page, int take) {
+        String sql = String.format("SELECT * FROM %s ORDER BY createdAt DESC LIMIT :limit OFFSET :offset", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("limit", take)
+                .addValue("offset", take * (page - 1));
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
+    }
+
+    public List<Post> getCategoryPagesOrderByCreatedAtDesc(int page, int per_page, String category) {
+        String sql = String.format("SELECT * FROM %s WHERE category = :category" +
+                " ORDER BY createdAt DESC LIMIT :limit OFFSET :offset", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("category", category)
+                .addValue("limit", per_page)
+                .addValue("offset", per_page * (page - 1));
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
+    }
+
 }

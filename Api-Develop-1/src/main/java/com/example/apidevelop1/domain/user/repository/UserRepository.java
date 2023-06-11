@@ -107,17 +107,6 @@ public class UserRepository {
         return namedParameterJdbcTemplate.update(sql, params);
     }
 
-    public int delete(List<User> users) {
-        String sql = String.format("DELETE FROM %s WHERE createdDate = :createdDate", TABLE);
-        var params = new MapSqlParameterSource().addValue("createdDate", users.get(0).getCreatedDate());
-        return namedParameterJdbcTemplate.update(sql, params);
-    }
-
-    private Optional<User> getNullableSingleUser(String sql, MapSqlParameterSource params, RowMapper<User> rowMapper) {
-        List<User> users = namedParameterJdbcTemplate.query(sql, params, rowMapper);
-        return Optional.ofNullable(DataAccessUtils.singleResult(users));
-    }
-
     public boolean nameNotExistsInDatabase(String name) {
         String sql = String.format("SELECT * FROM %s WHERE name = :name", TABLE);
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
@@ -140,4 +129,10 @@ public class UserRepository {
         }
         return users.get(0);
     }
+
+    private Optional<User> getNullableSingleUser(String sql, MapSqlParameterSource params, RowMapper<User> rowMapper) {
+        List<User> users = namedParameterJdbcTemplate.query(sql, params, rowMapper);
+        return Optional.ofNullable(DataAccessUtils.singleResult(users));
+    }
+
 }

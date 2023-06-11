@@ -1,6 +1,7 @@
 package com.example.apidevelop1.domain.follow.repository;
 
 import com.example.apidevelop1.domain.follow.entity.Follow;
+import com.example.apidevelop1.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,7 +57,7 @@ public class FollowRepository {
                 .build();
     }
 
-    public boolean alreadyExists(Follow follow) {
+    public boolean exists(Follow follow) {
         String sql = String.format("SELECT * FROM %s WHERE fromId = :fromId AND toId = :toId", TABLE);
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("fromId", follow.getFromId())
@@ -64,4 +65,29 @@ public class FollowRepository {
         List<Follow> follows = namedParameterJdbcTemplate.query(sql, params, rowMapper);
         return DataAccessUtils.singleResult(follows) != null;
     }
+
+    public int delete(Follow follow) {
+        String sql = String.format("DELETE FROM %s WHERE fromId = :fromId AND toId = :toId", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("fromId", follow.getFromId())
+                .addValue("toId", follow.getToId());
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public List<Long> getFollowerIds(User user) {
+        String sql = String.format("SELECT fromId FROM %s WHERE toId = :id", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", user.getId());
+
+        return namedParameterJdbcTemplate.query(sql, params, (ResultSet resultSet, int rowNum) -> resultSet.getLong("fromId"));
+    }
+
+    public List<Long> getFollowingIds(User user) {
+        String sql = String.format("SELECT toId FROM %s WHERE fromId = :id", TABLE);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", user.getId());
+
+        return namedParameterJdbcTemplate.query(sql, params, (ResultSet resultSet, int rowNum) -> resultSet.getLong("toId"));
+    }
+
 }

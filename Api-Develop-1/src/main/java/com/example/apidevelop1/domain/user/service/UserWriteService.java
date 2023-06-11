@@ -55,22 +55,4 @@ public class UserWriteService {
         User user = userReadService.findById(id);
         return userRepository.delete(user);
     }
-
-    @Transactional
-    public int deleteByEmail(String email) {
-        User user = userReadService.findByEmail(email);
-        return userRepository.delete(user);
-    }
-
-    @Transactional
-    public int deleteByName(String name) {
-        User user = userReadService.findByName(name);
-        return userRepository.delete(user);
-    }
-
-    @Transactional
-    public int deleteByCreatedDate(LocalDate createdDate) {
-        List<User> users = userReadService.findByCreatedDate(createdDate);
-        return userRepository.delete(users);
-    }
 }
