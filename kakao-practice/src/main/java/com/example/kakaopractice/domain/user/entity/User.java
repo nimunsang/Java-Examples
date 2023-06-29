@@ -1,36 +1,42 @@
 package com.example.kakaopractice.domain.user.entity;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@RequiredArgsConstructor
 @NoArgsConstructor(force = true)
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    @Id @GeneratedValue
+    private Long id;
 
-    private final String name;
+    private String name;
 
-    private final String email;
+    private String email;
 
-    private final String password;
+    private String password;
 
-    private final String role;
+    private String role;
 
-    private final LocalDateTime createdAt;
+    @CreatedDate
+    private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @Builder
+    public User(String name, String email, String password, String role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 }

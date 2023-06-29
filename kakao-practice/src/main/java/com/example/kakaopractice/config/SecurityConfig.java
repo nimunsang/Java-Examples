@@ -1,4 +1,4 @@
-package com.example.kakaopractice;
+package com.example.kakaopractice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

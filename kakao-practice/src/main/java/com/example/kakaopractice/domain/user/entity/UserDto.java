@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class UserDto {
 
-    private final long id;
+    private final Long id;
 
     private final String name;
 

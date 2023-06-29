@@ -16,6 +16,9 @@ public class ProductReadService {
     private final ProductRepository productRepository;
 
     public List<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).getContent();
+        List<Product> products = productRepository.findProductsBy(pageable).orElseThrow();
+
+        System.out.println(products);
+        return products;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.kakaopractice.controller;
+package com.example.kakaopractice.application.controller;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

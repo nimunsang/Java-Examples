@@ -1,4 +1,4 @@
-package com.example.kakaopractice;
+package com.example.kakaopractice.global.dto;
 
 import lombok.*;
 
