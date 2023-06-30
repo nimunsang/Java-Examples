@@ -14,8 +14,10 @@ public class OptionReadService {
     private final OptionRepository optionRepository;
 
     public List<Option> getOptionsByProductId(Long productId) {
-        List<Option> options = optionRepository.findAllByProductId(productId).orElseThrow();
+        return optionRepository.findAllByProductId(productId).orElseThrow();
+    }
 
-        return options;
+    public Option getOptionById(Long optionId) {
+        return optionRepository.findById(optionId).orElseThrow();
     }
 }

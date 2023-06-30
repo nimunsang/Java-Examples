@@ -16,7 +16,7 @@ public class UserWriteService {
                 .email("abc@abc.com")
                 .name("heechan")
                 .password("hello")
-                .role("hellorole")
+                .role("admin")
                 .build();
         userRepository.save(user);
     }

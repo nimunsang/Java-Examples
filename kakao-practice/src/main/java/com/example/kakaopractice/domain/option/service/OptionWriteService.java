@@ -19,7 +19,7 @@ public class OptionWriteService {
 
     private final ProductRepository productRepository;
 
-    public void create(String name, Long price, Long productId) {
+    public void create(String name, int price, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow();
 
         Option option = Option.builder()
@@ -28,6 +28,12 @@ public class OptionWriteService {
                 .product(product)
                 .build();
 
+        optionRepository.save(option);
+    }
+
+    public void modifyPrice(Long optionId, int price) {
+        Option option = optionRepository.findById(optionId).orElseThrow();
+        option.setPrice(price);
         optionRepository.save(option);
     }
 }

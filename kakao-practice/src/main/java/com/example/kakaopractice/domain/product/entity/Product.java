@@ -16,9 +16,10 @@ import java.util.List;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(force = true)
+@Table(name = "product_tb")
 public class Product {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -27,9 +28,9 @@ public class Product {
 
     private String image;
 
-    private Long price;
+    private int price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Option> options;
 
     @CreatedDate
@@ -39,7 +40,7 @@ public class Product {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Product(String name, String description, String image, Long price) {
+    public Product(String name, String description, String image, int price) {
         this.name = name;
         this.description = description;
         this.image = image;

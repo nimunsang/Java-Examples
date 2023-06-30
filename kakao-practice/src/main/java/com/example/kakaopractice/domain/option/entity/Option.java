@@ -10,21 +10,22 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor(force = true)
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "options")
+@Table(name = "option_tb")
 public class Option {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     private String name;
 
-    private Long price;
+    private int price;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -33,7 +34,7 @@ public class Option {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Option(Product product, String name, Long price) {
+    public Option(Product product, String name, int price) {
         this.product = product;
         this.name = name;
         this.price = price;

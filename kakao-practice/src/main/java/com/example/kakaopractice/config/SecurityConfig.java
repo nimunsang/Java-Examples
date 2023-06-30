@@ -18,7 +18,7 @@ public class SecurityConfig {
             .authorizeHttpRequests()
             .requestMatchers(
             new AntPathRequestMatcher("/**"))
-            .permitAll();
+            .permitAll(); // Spring Security 적용 시, 초기 Login 화면을 보이지 않도록 한다.
 
         return http.build();
     }
