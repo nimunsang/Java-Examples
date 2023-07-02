@@ -1,11 +1,15 @@
 package com.example.kakaopractice.global.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Setter
+@AllArgsConstructor
 public class ApiError {
 
-    private int status;
+    private String errorMessage;
 
-    private String message;
+    private int errorCode;
+
 }

@@ -15,10 +15,12 @@ public class ProductReadService {
 
     private final ProductRepository productRepository;
 
-    public List<Product> getAllProducts(Pageable pageable) {
+    public List<Product> getProducts(Pageable pageable) {
         List<Product> products = productRepository.findProductsBy(pageable).orElseThrow();
-
-        System.out.println(products);
         return products;
+    }
+
+    public Product getOneProduct(Long productId) {
+        return productRepository.findById(productId).orElseThrow();
     }
 }

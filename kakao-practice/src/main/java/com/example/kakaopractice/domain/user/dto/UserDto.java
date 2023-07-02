@@ -1,4 +1,4 @@
-package com.example.kakaopractice.domain.user.entity;
+package com.example.kakaopractice.domain.user.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

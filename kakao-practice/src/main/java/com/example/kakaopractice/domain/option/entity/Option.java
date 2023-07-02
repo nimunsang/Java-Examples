@@ -1,5 +1,6 @@
 package com.example.kakaopractice.domain.option.entity;
 
+import com.example.kakaopractice.domain.option.dto.OptionDto;
 import com.example.kakaopractice.domain.product.entity.Product;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,5 +39,9 @@ public class Option {
         this.product = product;
         this.name = name;
         this.price = price;
+    }
+
+    public OptionDto toDto() {
+        return new OptionDto(id, name, price);
     }
 }

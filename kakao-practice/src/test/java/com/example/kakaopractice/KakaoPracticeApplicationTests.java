@@ -5,16 +5,11 @@ import com.example.kakaopractice.domain.option.entity.Option;
 import com.example.kakaopractice.domain.option.service.OptionReadService;
 import com.example.kakaopractice.domain.option.service.OptionWriteService;
 import com.example.kakaopractice.domain.order.service.OrderWriteService;
-import com.example.kakaopractice.domain.product.entity.Product;
-import com.example.kakaopractice.domain.product.repository.ProductRepository;
 import com.example.kakaopractice.domain.product.service.ProductWriteService;
-import com.example.kakaopractice.domain.user.repository.UserRepository;
 import com.example.kakaopractice.domain.user.service.UserWriteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest
 class KakaoPracticeApplicationTests {
@@ -36,6 +31,9 @@ class KakaoPracticeApplicationTests {
 
     @Autowired
     OrderWriteService orderWriteService;
+
+//    @Autowired
+//    UserController userController;
 
     @Test
     void createUserTest() {
@@ -152,4 +150,18 @@ class KakaoPracticeApplicationTests {
         Option option2 = optionReadService.getOptionById(2L);
         System.out.println(option2.getPrice()); // 10000 (새로 조회를 하면, 바뀌어있다)
     }
+
+//    @Test
+//    void duplicateEmailCheckTest() {
+//        String email = "abc@abc.com";
+//        ApiResponse apiResponse = userController.checkDuplicateEmail(email);
+//        System.out.println(apiResponse);
+//    }
+//
+//    @Test
+//    void notDuplicateEmailCheckTest() {
+//        String email = "aa@aa.com";
+//        ApiResponse apiResponse = userController.checkDuplicateEmail(email);
+//        System.out.println(apiResponse);
+//    }
 }
