@@ -22,6 +22,8 @@ import java.security.Principal;
 @RequestMapping("/question")
 @RequiredArgsConstructor
 @Controller
+@RestController
+@RestControllerAdvice
 public class QuestionController {
 
     private final QuestionService questionService;

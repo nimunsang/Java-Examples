@@ -3,6 +3,7 @@ package com.example.apidevelop1.domain.user.entity;
 import com.example.apidevelop1.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 import utils.Constants;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 
 
 @Getter
+@Setter
 public class User {
 
     private final Long id;
