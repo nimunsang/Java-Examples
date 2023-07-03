@@ -22,7 +22,7 @@ public class ProductController {
 
     @GetMapping("")
     public ApiResponse getProductPage(@RequestParam(defaultValue = "0") int page) {
-        PageRequest pageRequest = PageRequest.of(page, 5);
+        PageRequest pageRequest = PageRequest.of(page, 9);
         List<Product> products = productReadService.getProducts(pageRequest);
         List<ProductDto> productDtos = products.stream()
                 .map(Product::toDto)

@@ -15,7 +15,7 @@ public class UserWriteService {
     public void createUser(UserCreateDto userCreateDto) {
         User user = User.builder()
                 .email(userCreateDto.getEmail())
-                .name(userCreateDto.getName())
+                .username(userCreateDto.getUsername())
                 .password(userCreateDto.getPassword())
                 .build();
 
@@ -25,7 +25,7 @@ public class UserWriteService {
     public void createDummyUser() {
         User user = User.builder()
                 .email("abc@abc.com")
-                .name("heechan")
+                .username("heechan")
                 .password("hello")
                 .role("admin")
                 .build();

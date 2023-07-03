@@ -3,11 +3,13 @@ package com.example.kakaopractice.domain.user.entity;
 
 import com.example.kakaopractice.domain.cart.entity.Cart;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class User {
     private Long id;
 
     @Column(length = 20)
-    private String name;
+    private String username;
 
     @Column(length = 100)
     private String email;
@@ -30,8 +32,14 @@ public class User {
     @Column(length = 256)
     private String password;
 
+    // 테이블 생성 시, default값 설정
     @Column(length = 20)
+    @ColumnDefault("customer")
     private String role;
+
+    // 객체 생성 시, default값 설정 방법
+//    @Builder.Default()
+//    private String role = "customer";
 
     @CreatedDate
     @Column(name = "join_date")
@@ -42,8 +50,8 @@ public class User {
     private List<Cart> carts;
 
     @Builder
-    public User(String name, String email, String password, String role) {
-        this.name = name;
+    public User(String username, String email, String password, String role) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;

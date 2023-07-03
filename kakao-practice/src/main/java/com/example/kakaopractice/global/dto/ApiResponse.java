@@ -1,5 +1,6 @@
 package com.example.kakaopractice.global.dto;
 
+import com.example.kakaopractice.utils.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -23,7 +24,11 @@ public class ApiResponse {
     }
 
     public static ApiResponse OK() {
-        return new ApiResponse();
+        return ApiResponse.builder()
+                .success("true")
+                .response(null)
+                .apiError(null)
+                .build();
     }
 
     public static ApiResponse OK(Object response) {
@@ -34,8 +39,8 @@ public class ApiResponse {
                 .build();
     }
 
-    public static ApiResponse ERROR(String errorMessage, int errorCode) {
-        ApiError apiError = new ApiError(errorMessage, errorCode);
+    public static ApiResponse ERROR(String message, int status) {
+        ApiError apiError = new ApiError(message, status);
         return ApiResponse.builder()
                 .success("false")
                 .response(null)
