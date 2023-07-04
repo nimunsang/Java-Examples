@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "user_tb")
@@ -23,19 +23,19 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 45, nullable = false)
     private String username;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 256)
+    @Column(length = 256, nullable = false)
     private String password;
 
     // 테이블 생성 시, default값 설정
-    @Column(length = 20)
+    @Column(length = 30)
     @ColumnDefault("customer")
-    private String role;
+    private String roles;
 
     // 객체 생성 시, default값 설정 방법
 //    @Builder.Default()
@@ -45,15 +45,12 @@ public class User {
     @Column(name = "join_date")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    // cart <-> user 양방향 매핑. 왜? user -> cart item을 조회해야 할 때가 있다.
-    private List<Cart> carts;
-
     @Builder
-    public User(String username, String email, String password, String role) {
+    public User(Long id, String username, String email, String password, String roles) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
     }
 }

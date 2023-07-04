@@ -1,12 +1,11 @@
 package com.example.kakaopractice.domain.cart.entity;
 
-import com.example.kakaopractice.domain.option.entity.Option;
+import com.example.kakaopractice.domain.product.entity.ProductOption;
 import com.example.kakaopractice.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -21,7 +20,7 @@ public class Cart {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private Option option;
+    private ProductOption productOption;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -29,8 +28,9 @@ public class Cart {
     private int quantity;
 
     @Builder
-    public Cart(Option option, User user, int quantity) {
-        this.option = option;
+    public Cart(Long id, ProductOption productOption, User user, int quantity) {
+        this.id = id;
+        this.productOption = productOption;
         this.user = user;
         this.quantity = quantity;
     }

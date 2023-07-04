@@ -1,7 +1,6 @@
 package com.example.kakaopractice.domain.product.entity;
 
 
-import com.example.kakaopractice.domain.option.entity.Option;
 import com.example.kakaopractice.domain.product.dto.ProductWithOptionsDto;
 import com.example.kakaopractice.domain.product.dto.ProductDto;
 import lombok.*;
@@ -11,11 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(force = true)
@@ -25,16 +22,16 @@ public class Product {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(length = 100, nullable = false)
+    private String productName;
 
+    @Column(length = 1000, nullable = false)
     private String description;
 
+    @Column(length = 500)
     private String image;
 
     private int price;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<Option> options;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -43,19 +40,15 @@ public class Product {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Product(String name, String description, String image, int price) {
-        this.name = name;
+    public Product(Long id, String productName, String description, String image, int price) {
+        this.id = id;
+        this.productName = productName;
         this.description = description;
         this.image = image;
         this.price = price;
     }
 
-    public ProductWithOptionsDto toDtoWithOptions() {
-        return new ProductWithOptionsDto(id, name, description, image, price,
-                options.stream().map(Option::toDto).collect(Collectors.toList()));
-    }
-
     public ProductDto toDto() {
-        return new ProductDto(id, name, description, image, price);
+        return new ProductDto(id, productName, description, image, price);
     }
 }

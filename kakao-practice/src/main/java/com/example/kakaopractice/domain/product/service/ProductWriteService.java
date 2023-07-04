@@ -12,9 +12,9 @@ public class ProductWriteService {
 
     private final ProductRepository productRepository;
 
-    public void create(String name, String description, String image, int price) {
+    public void create(String productName, String description, String image, int price) {
         Product product = Product.builder()
-                .name(name)
+                .productName(productName)
                 .description(description)
                 .image(image)
                 .price(price)

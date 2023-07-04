@@ -1,21 +1,18 @@
-package com.example.kakaopractice.domain.option.service;
+package com.example.kakaopractice.domain.product.service;
 
-import com.example.kakaopractice.domain.option.entity.Option;
-import com.example.kakaopractice.domain.option.repository.OptionRepository;
+import com.example.kakaopractice.domain.product.repository.ProductOptionRepository;
 import com.example.kakaopractice.domain.product.entity.Product;
 import com.example.kakaopractice.domain.product.repository.ProductRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Getter
 @Service
 @RequiredArgsConstructor
-public class OptionWriteService {
+public class ProductOptionWriteService {
 
-    private final OptionRepository optionRepository;
+    private final ProductOptionRepository productOptionRepository;
 
     private final ProductRepository productRepository;
 
@@ -28,12 +25,12 @@ public class OptionWriteService {
                 .product(product)
                 .build();
 
-        optionRepository.save(option);
+        productOptionRepository.save(option);
     }
 
     public void modifyPrice(Long optionId, int price) {
-        Option option = optionRepository.findById(optionId).orElseThrow();
+        Option option = productOptionRepository.findById(optionId).orElseThrow();
         option.setPrice(price);
-        optionRepository.save(option);
+        productOptionRepository.save(option);
     }
 }

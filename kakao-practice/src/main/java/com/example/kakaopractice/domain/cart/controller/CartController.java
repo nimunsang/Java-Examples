@@ -1,4 +1,4 @@
-package com.example.kakaopractice.application.controller;
+package com.example.kakaopractice.domain.cart.controller;
 
 
 import com.example.kakaopractice.domain.cart.service.CartReadService;

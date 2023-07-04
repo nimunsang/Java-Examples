@@ -1,9 +1,9 @@
 package com.example.kakaopractice;
 
 import com.example.kakaopractice.domain.cart.service.CartWriteService;
-import com.example.kakaopractice.domain.option.entity.Option;
-import com.example.kakaopractice.domain.option.service.OptionReadService;
-import com.example.kakaopractice.domain.option.service.OptionWriteService;
+import com.example.kakaopractice.domain.product.entity.ProductOption;
+import com.example.kakaopractice.domain.product.service.ProductOptionReadService;
+import com.example.kakaopractice.domain.product.service.ProductOptionWriteService;
 import com.example.kakaopractice.domain.order.service.OrderWriteService;
 import com.example.kakaopractice.domain.product.service.ProductWriteService;
 import com.example.kakaopractice.domain.user.service.UserWriteService;
@@ -21,10 +21,10 @@ class KakaoPracticeApplicationTests {
     private ProductWriteService productWriteService;
 
     @Autowired
-    OptionWriteService optionWriteService;
+    ProductOptionWriteService optionWriteService;
 
     @Autowired
-    OptionReadService optionReadService;
+    ProductOptionReadService productOptionReadService;
 
     @Autowired
     CartWriteService cartWriteService;
@@ -141,14 +141,14 @@ class KakaoPracticeApplicationTests {
     void modifyOptionPriceTest() {
         // 옵션가격을 변경했을 때, order_item_tb는 변하지 않는다.
 
-        Option option = optionReadService.getOptionById(2L);
-        System.out.println(option.getPrice());
+        ProductOption productOption = productOptionReadService.getOptionById(2L);
+        System.out.println(productOption.getPrice());
 
         optionWriteService.modifyPrice(2L, 10000);
-        System.out.println(option.getPrice()); // 1000 (기존 객체는 변하지 않는다)
+        System.out.println(productOption.getPrice()); // 1000 (기존 객체는 변하지 않는다)
 
-        Option option2 = optionReadService.getOptionById(2L);
-        System.out.println(option2.getPrice()); // 10000 (새로 조회를 하면, 바뀌어있다)
+        ProductOption productOption2 = productOptionReadService.getOptionById(2L);
+        System.out.println(productOption2.getPrice()); // 10000 (새로 조회를 하면, 바뀌어있다)
     }
 
 //    @Test

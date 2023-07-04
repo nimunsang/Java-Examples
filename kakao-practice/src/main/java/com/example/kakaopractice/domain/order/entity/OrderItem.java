@@ -1,7 +1,7 @@
 package com.example.kakaopractice.domain.order.entity;
 
 
-import com.example.kakaopractice.domain.option.entity.Option;
+import com.example.kakaopractice.domain.product.entity.ProductOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class OrderItem {
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Option option;
+    private ProductOption productOption;
 
     @Column(name = "quantity")
     private int quantity;
@@ -32,9 +32,10 @@ public class OrderItem {
     private int price;
 
     @Builder
-    public OrderItem(Order order, Option option, int quantity, int price) {
+    public OrderItem(Long id, Order order, ProductOption productOption, int quantity, int price) {
+        this.id = id;
         this.order = order;
-        this.option = option;
+        this.productOption = productOption;
         this.quantity = quantity;
         this.price = price;
     }

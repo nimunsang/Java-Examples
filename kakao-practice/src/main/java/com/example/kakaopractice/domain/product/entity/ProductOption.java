@@ -1,8 +1,10 @@
-package com.example.kakaopractice.domain.option.entity;
+package com.example.kakaopractice.domain.product.entity;
 
-import com.example.kakaopractice.domain.option.dto.OptionDto;
-import com.example.kakaopractice.domain.product.entity.Product;
-import lombok.*;
+import com.example.kakaopractice.domain.product.dto.ProductOptionDto;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "option_tb")
-public class Option {
+public class ProductOption {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,13 +37,13 @@ public class Option {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Option(Product product, String name, int price) {
+    public ProductOption(Product product, String name, int price) {
         this.product = product;
         this.name = name;
         this.price = price;
     }
 
-    public OptionDto toDto() {
-        return new OptionDto(id, name, price);
+    public ProductOptionDto toDto() {
+        return new ProductOptionDto(id, name, price);
     }
 }
