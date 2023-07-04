@@ -1,8 +1,8 @@
 package com.example.kakaopractice.domain.user.service;
 
 import com.example.kakaopractice.domain.user.entity.User;
-import com.example.kakaopractice.domain.user.entity.UserDto;
 import com.example.kakaopractice.domain.user.repository.UserRepository;
+import com.example.kakaopractice.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +15,8 @@ public class UserReadService {
     public User findUserById(Long id) {
         return userRepository.findUserById(id).orElseThrow();
     }
-//    public UserDto getUserDto()
+
+    public boolean checkUserAlreadyExists(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
+    }
 }
